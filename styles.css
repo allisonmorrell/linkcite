@@ -1,0 +1,29 @@
+:root {
+  --primary-color: #0077c2;
+  --secondary-color: #005a9c;
+  --accent-color: #00b8ff;
+}
+
+.navbar-default {
+  background-color: var(--primary-color);
+  border-color: var(--secondary-color);
+}
+.navbar-default .navbar-brand {
+  color: white;
+}
+.navbar-default .navbar-nav > li > a {
+  color: white;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: var(--accent-color);
+}
+
+h1, p {
+  color: var(--secondary-color);
+}
+h1 {
+  font-size: 3em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}

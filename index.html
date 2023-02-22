@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Directory Listing</title>
+</head>
+<body>
+	<h1>Directory Listing</h1>
+	<ul>
+		<!-- Use JavaScript to get a list of all files in the current directory -->
+		<script>
+			var files = [
+				{% for file in site.static_files %}
+					"{{ file.path }}",
+				{% endfor %}
+			];
+			
+			// Sort the list of files alphabetically
+			files.sort();
+			
+			// Loop through the list of files and add them to the table of contents
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				document.write("<li><a href='" + file + "'>" + file + "</a></li>");
+			}
+		</script>
+	</ul>
+</body>
+</html>

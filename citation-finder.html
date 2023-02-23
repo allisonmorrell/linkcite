@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Citation finder</title>
+	<style>
+		#input-box {
+			width: 100%;
+		}
+		/* Add modern fonts */
+		@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+		/* Set the default font and background color */
+		body {
+		  font-family: 'Roboto', sans-serif;
+		  background-color: #f2f2f2;
+		}
+
+		/* Style for the main heading */
+		h1 {
+		  font-size: 36px;
+		  font-weight: bold;
+		  color: #333;
+		  margin: 20px 0;
+		}
+
+		/* Style for secondary headings */
+		h2 {
+		  font-size: 24px;
+		  font-weight: bold;
+		  color: #333;
+		  margin: 15px 0;
+		}
+
+		/* Style for regular text */
+		p {
+		  font-size: 16px;
+		  line-height: 1.5;
+		  color: #666;
+		  margin: 10px 0;
+		}
+		
+		
+		/* Style for the button */
+		button {
+		  font-size: 16px;
+		  font-weight: bold;
+		  color: #fff;
+		  background-color: #4caf50;
+		  border: none;
+		  border-radius: 4px;
+		  padding: 12px 24px;
+		  cursor: pointer;
+		  transition: all 0.3s ease;
+		}
+
+		/* Hover state for the button */
+		button:hover {
+		  background-color: #3e8e41;
+		}
+	</style>
+	<script>
+		function searchAll() {
+			// Clear previous input
+			document.getElementById("summary").innerHTML = "";
+			document.getElementById("neutral-output-area").innerHTML = "";
+			document.getElementById("other-output-area").innerHTML = "";
+			document.getElementById("statute-output-area").innerHTML = "";
+			document.getElementById("regulation-output-area").innerHTML = "";
+			
+			// Get the value from the input text box
+			var inputText = document.getElementById("input-box").value;
+			
+			// Define the regular expression patterns for all four searches
+			var neutralPattern = /(?:1|2)[0-9]{3} [A-Z]{2,8} [0-9]{1,8}/g;
+			<!-- beta version without testing -->
+			var otherPattern = /\[?[0-9]{1,5}\]? ?[0-9]{0,5} (?:BCLR|DLR|OR|WWR|CCC|CPR|Can Tax J|ALR|FCR|Sask LR|CBR|CHRR|CJFL|CLELJ|CLT|CRR|CR|MLB|RFL|SCR|SCJ|ACS|LAC|APR|B\.C\.L\.R\.|D\.L\.R\.|O\.R\.|W\.W\.R\.|C\.C\.C\.|C\.P\.R\.|Can Tax J|A\.L\.R\.|F\.C\.R\.|Sask\. L\.R\.|C\.B\.R\.|C\.H\.R\.R\.|C\.J\.F\.L\.|C\.L\.E\.L\.J\.|C\.L\.T\.|C\.R\.R\.|C\.R\.|M\.L\.B\.|R\.F\.L\.|S\.C\.R\.|S\.C\.J\.|A\.C\.S\.|L\.A\.C\.|A\.P\.R\.) \(?[0-9]{0,1}[a-z]{0,3}\)? ?[0-9]{1,6}/gi;
+			var statutePattern = /R?\.?[SC]\.?[A-Z\.]{0,5}[ ,]{1,2}[0-9\-]{0,10}[ ,]{0,2}c.? [0-9A-Z\-]{1,5}/gi;
+			<!-- beta version without testing -->
+			var regulationPattern = /(?:BC Reg|Alta Reg|Sask Reg|Man Reg|O Reg|RLRQ|NB Reg|NS Reg|PEI Reg|NLR|SOR|CRC|YOIC|NWT Reg|NU Reg|NWT R\-|NU R\-|BC Reg\.|B\.C\. Reg\.|Alta\. Reg\.|Sask\. Reg\.|Man\. Reg\.|O\. Reg\.|RLRQ\.|NB Reg\.|NS Reg\.|PEI Reg\.|NLR\.|C\.R\.C\.|YOIC\.|NWT Reg\.|NU Reg\.) [0-9]{1,5}\/[0-9]{2,4}/gi;
+
+			// Use the patterns to search for matches in the input text
+			var neutralMatches = [...new Set(inputText.match(neutralPattern))];
+			var otherMatches = [...new Set(inputText.match(otherPattern))];
+			var statuteMatches = [...new Set(inputText.match(statutePattern))];
+			var regulationMatches = [...new Set(inputText.match(regulationPattern))];
+			
+			var totalResults = neutralMatches.length + otherMatches.length + statuteMatches.length + regulationMatches.length
+			var wordCount = inputText.trim().split(/\s+/).length
+			document.getElementById("summary").innerHTML = `Total matches: ${totalResults}<br>Word count: ${wordCount}`;
+			
+			// Display the matches in the output area for each search
+			if (neutralMatches.length > 0) {
+			    addLink(neutralMatches, "neutral-output-area");
+			} else {
+			    document.getElementById("neutral-output-area").innerHTML = "No neutral citations found.";
+			}
+
+			if (otherMatches.length > 0) {
+			    addLink(otherMatches, "other-output-area");
+			} else {
+			    document.getElementById("other-output-area").innerHTML = "No other citations found.";
+			}
+
+			if (statuteMatches.length > 0) {
+			    addLink(statuteMatches, "statute-output-area");
+			} else {
+			    document.getElementById("statute-output-area").innerHTML = "No statutes found.";
+			}
+
+			if (regulationMatches.length > 0) {
+			    addLink(regulationMatches, "regulation-output-area");
+			} else {
+			    document.getElementById("regulation-output-area").innerHTML = "No regulations found.";
+			}
+		}
+	</script>
+	<script>
+		function searchUrl(arr) {
+			const encodedTerms = arr.map(term => `%22${encodeURIComponent(term)}%22`).join('%20OR%20');
+			const url = `https://www.canlii.org/en/#search/id=${encodedTerms}`;
+			return url;
+	    }
+		
+		function addLink(matches, outputAreaId) {
+		    // Get the output area element
+			var outputArea = document.getElementById(outputAreaId);
+			
+			// If less than 30 matches, provide search link (CanLII limit)
+			if (matches.length < 30) {
+			    var link = document.createElement("a");
+			
+			  // Set the link text to "Search all"
+				link.textContent = "Search all";
+
+			  // Set the href attribute of the link by calling the function with matches array as argument
+				link.href = searchUrl(matches);
+
+			  // Insert the link at the top of the output area element
+				outputArea.insertBefore(link, outputArea.firstChild);
+			}
+		  // Set the inner HTML of the output area element to the matches array
+		  var number = matches.length
+		  outputArea.innerHTML += "<br><b>" + number + " Results</b>" + "<br><br>" + matches.join("<br>");
+		}
+	</script>
+</head>
+<body>
+	<h1>Citation Finder</h1>
+	<p>
+		This tool uses regular expression patterns to search text for neutral citations, other citations, statutes, and regulations. It produces a list of each below. If there are less than 30 results in a given category, a link is provided to search for all of those results on CanLII. 
+	</p>
+	<p>
+		This tool does not collect any data. All processing is done within your web browser.
+	</p>
+	<p>
+		See also <a href="citation-linker.html">Citation Linker</a>, to add a link to CanLII to neutral citations found in an inputted text.
+	</p>
+	<h2>Input</h2>
+	<label for="input-box">Enter text here:</label><br>
+	<textarea id="input-box" rows="10" cols="100%" placeholder="Enter your text here"></textarea><br><br>
+	<button onclick="searchAll()">Search</button><br><br>
+	<h2>Output</h2>
+	<p><strong>Summary</strong></p>
+	<p>
+		<div id="summary"></div><br><br>
+	</p>
+	<p><strong>Neutral Citations</strong></p>
+	<p>
+		<div id="neutral-output-area"></div><br><br>
+	</p>
+	<p><strong>Other Citations</strong></p>
+	<p>
+		<div id="other-output-area"></div><br><br>
+	</p>
+	<p><strong>Statutes</strong></p>
+	<p>
+		<div id="statute-output-area"></div><br><br>
+	</p>
+	<p><strong>Regulations</strong></p>
+	<p>
+		<div id="regulation-output-area"></div>
+	</p>
+	
+</body>
+</html>

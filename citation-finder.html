@@ -5,6 +5,7 @@
 	<style>
 		#input-box {
 			width: 100%;
+			overflow-y: auto;
 		}
 		/* Add modern fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -39,6 +40,10 @@
 		  margin: 10px 0;
 		}
 		
+		strong {
+			font-size: 20px;
+		}
+		
 		
 		/* Style for the button */
 		button {
@@ -57,36 +62,115 @@
 		button:hover {
 		  background-color: #3e8e41;
 		}
+		
+		table {
+		  border-collapse: collapse;
+		  width: 100%;
+		  margin: 20px 0;
+		}
+
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		  border: 1px solid #ddd;
+		}
+
+		th {
+		  background-color: #4caf50;
+		  color: white;
+		}
+
+		tr:nth-child(even) {
+		  background-color: #f2f2f2;
+		}
+
+		tr:hover {
+		  background-color: #ddd;
+		}
+
+		@media screen and (max-width: 600px) {
+		  table {
+			font-size: 12px;
+		  }
+		}
+		
 	</style>
 	<script>
+		'use strict';
 		function searchAll() {
-			// Clear previous input
-			document.getElementById("summary").innerHTML = "";
-			document.getElementById("neutral-output-area").innerHTML = "";
-			document.getElementById("other-output-area").innerHTML = "";
-			document.getElementById("statute-output-area").innerHTML = "";
-			document.getElementById("regulation-output-area").innerHTML = "";
+			
+			// Define array consisting of names of each area
+			const outputAreaIds = ["summary", "neutral-output-area", "other-output-area", "statute-output-area", "regulation-output-area"]
+		
+			// Clear output areas
+			for (let area of outputAreaIds) {
+				clearOutputArea(area);
+			}
 			
 			// Get the value from the input text box
-			var inputText = document.getElementById("input-box").value;
+			const inputText = document.getElementById("input-box").value;
 			
 			// Define the regular expression patterns for all four searches
-			var neutralPattern = /(?:1|2)[0-9]{3} [A-Z]{2,8} [0-9]{1,8}/g;
-			<!-- beta version without testing -->
-			var otherPattern = /\[?[0-9]{1,5}\]? ?[0-9]{0,5} (?:BCLR|DLR|OR|WWR|CCC|CPR|Can Tax J|ALR|FCR|Sask LR|CBR|CHRR|CJFL|CLELJ|CLT|CRR|CR|MLB|RFL|SCR|SCJ|ACS|LAC|APR|B\.C\.L\.R\.|D\.L\.R\.|O\.R\.|W\.W\.R\.|C\.C\.C\.|C\.P\.R\.|Can Tax J|A\.L\.R\.|F\.C\.R\.|Sask\. L\.R\.|C\.B\.R\.|C\.H\.R\.R\.|C\.J\.F\.L\.|C\.L\.E\.L\.J\.|C\.L\.T\.|C\.R\.R\.|C\.R\.|M\.L\.B\.|R\.F\.L\.|S\.C\.R\.|S\.C\.J\.|A\.C\.S\.|L\.A\.C\.|A\.P\.R\.) \(?[0-9]{0,1}[a-z]{0,3}\)? ?[0-9]{1,6}/gi;
-			var statutePattern = /R?\.?[SC]\.?[A-Z\.]{0,5}[ ,]{1,2}[0-9\-]{0,10}[ ,]{0,2}c.? [0-9A-Z\-‑]{1,6}/gi;
-			<!-- beta version without testing -->
-			var regulationPattern = /(?:BC Reg|Alta Reg|Sask Reg|Man Reg|O Reg|RLRQ|NB Reg|NS Reg|PEI Reg|NLR|SOR|CRC|YOIC|NWT Reg|NU Reg|NWT R\-|NU R\-|BC Reg\.|B\.C\. Reg\.|Alta\. Reg\.|Sask\. Reg\.|Man\. Reg\.|O\. Reg\.|RLRQ\.|NB Reg\.|NS Reg\.|PEI Reg\.|NLR\.|C\.R\.C\.|YOIC\.|NWT Reg\.|NU Reg\.) [0-9]{1,5}\/[0-9]{2,4}/gi;
+			const neutralPattern = /(?:1|2)[0-9]{3} [A-Z]{2,8} [0-9]{1,8}/g;
+			const otherPattern = /\[?[0-9]{1,5}\]? ?[0-9]{0,5} (?:BCLR|DLR|OR|WWR|CCC|CPR|Can Tax J|ALR|FCR|Sask LR|CBR|CHRR|CJFL|CLELJ|CLT|CRR|CR|MLB|RFL|SCR|SCJ|ACS|LAC|APR|B\.C\.L\.R\.|D\.L\.R\.|O\.R\.|W\.W\.R\.|C\.C\.C\.|C\.P\.R\.|Can Tax J|A\.L\.R\.|F\.C\.R\.|Sask\. L\.R\.|C\.B\.R\.|C\.H\.R\.R\.|C\.J\.F\.L\.|C\.L\.E\.L\.J\.|C\.L\.T\.|C\.R\.R\.|C\.R\.|M\.L\.B\.|R\.F\.L\.|S\.C\.R\.|S\.C\.J\.|A\.C\.S\.|L\.A\.C\.|A\.P\.R\.) \(?[0-9]{0,1}[a-z]{0,3}\)? ?[0-9]{1,6}/gi;
+			const statutePattern = /R?\.?[SC]\.?[A-Z\.]{0,5}[ ,]{1,2}[0-9\-]{0,10}[ ,]{0,2}c.? [0-9A-Z\-‑]{1,6}/gi;
+			const regulationPattern = /(?:BC Reg|Alta Reg|Sask Reg|Man Reg|O Reg|RLRQ|NB Reg|NS Reg|PEI Reg|NLR|SOR|CRC|YOIC|NWT Reg|NU Reg|NWT R\-|NU R\-|BC Reg\.|B\.C\. Reg\.|Alta\. Reg\.|Sask\. Reg\.|Man\. Reg\.|O\. Reg\.|RLRQ\.|NB Reg\.|NS Reg\.|PEI Reg\.|NLR\.|C\.R\.C\.|YOIC\.|NWT Reg\.|NU Reg\.) [0-9]{1,5}\/[0-9]{2,4}/gi;
 
 			// Use the patterns to search for matches in the input text
-			var neutralMatches = [...new Set(inputText.match(neutralPattern))];
-			var otherMatches = [...new Set(inputText.match(otherPattern))];
-			var statuteMatches = [...new Set(inputText.match(statutePattern))];
-			var regulationMatches = [...new Set(inputText.match(regulationPattern))];
+			const neutralMatches = [...new Set(inputText.match(neutralPattern))];
+			const otherMatches = [...new Set(inputText.match(otherPattern))];
+			const statuteMatches = [...new Set(inputText.match(statutePattern))];
+			const regulationMatches = [...new Set(inputText.match(regulationPattern))];
 			
-			var totalResults = neutralMatches.length + otherMatches.length + statuteMatches.length + regulationMatches.length
-			var wordCount = inputText.trim().split(/\s+/).length
-			document.getElementById("summary").innerHTML = `Total matches: ${totalResults}<br>Word count: ${wordCount}`;
+
+			// Define variables related to summary information
+			const totalResults = neutralMatches.length + otherMatches.length + statuteMatches.length + regulationMatches.length
+			const wordCount = inputText.trim().split(/\s+/).length
+			const allMatches = neutralMatches.concat(otherMatches, statuteMatches, regulationMatches);
+			
+			// Sort all matches
+			allMatches.sort()
+			
+			// Divide matches into groups of 21 or less
+			let groups = [];
+			for (let i = 0; i < allMatches.length; i += 20) {
+				groups.push(allMatches.slice(i, i + 20));
+			}
+
+			// Call searchUrl function on each group and store the returned URL in an array
+			let urls = [];
+			for (let i = 0; i < groups.length; i++) {
+				let url = searchUrl(groups[i]);
+				urls.push(url);
+			}
+			
+			// Generate an unordered list of links for the urls array
+			let linksList = "<ul>";
+			for (let i = 0; i < urls.length; i++) {
+				linksList += "<li><a href='" + urls[i] + "' target='_blank'>" + (i + 1) + " — " +  groups[i][0] + " to " + groups[i][groups[i].length - 1] + "</a></li>";
+			}
+			linksList += "</ul>";
+			
+			// Generate list of all results alphabetically
+			let listItems = "";
+			for (let i = 0; i < allMatches.length; i++) {
+				listItems += "<li>" + allMatches[i] + "</li>";
+			}
+			const listHtml = "<ul>" + listItems + "</ul>";
+			
+			// Call functions to get summary table
+			const courtArray = countCourts(neutralMatches);
+			const tableHtml = getCountCourtsTable(courtArray);
+			
+			// Fill in summary section
+			document.getElementById("summary").innerHTML = `
+				Total matches: ${totalResults}<br>
+				Word count: ${wordCount}<br><br>
+				<b>Search links:</b><br>${linksList}<br><br>
+				<details><summary><b>All results (click to expand):</b></summary><p>${listHtml}</p></details>
+				<br><br><b>Citation frequency:</b><br>${tableHtml}<br><br>
+				
+			`;
 			
 			// Display the matches in the output area for each search
 			if (neutralMatches.length > 0) {
@@ -115,6 +199,11 @@
 		}
 	</script>
 	<script>
+		
+		function clearOutputArea(id) {
+			document.getElementById(id).innerHTML = "";
+		}
+		
 		function searchUrl(arr) {
 			const encodedTerms = arr.map(term => `%22${encodeURIComponent(term)}%22`).join('%20OR%20');
 			const url = `https://www.canlii.org/en/#search/id=${encodedTerms}`;
@@ -123,32 +212,68 @@
 		
 		function addLink(matches, outputAreaId) {
 		    // Get the output area element
-			var outputArea = document.getElementById(outputAreaId);
+			const outputArea = document.getElementById(outputAreaId);
 			
 			// If less than 30 matches, provide search link (CanLII limit)
-			if (matches.length < 30) {
-			    var link = document.createElement("a");
+			if (matches.length < 21) {
+			    const link = document.createElement("a");
 			
 			  // Set the link text to "Search all"
 				link.textContent = "Search all";
 
 			  // Set the href attribute of the link by calling the function with matches array as argument
 				link.href = searchUrl(matches);
+				link.target = "_blank";
 
 			  // Insert the link at the top of the output area element
 				outputArea.insertBefore(link, outputArea.firstChild);
 			}
 		  // Set the inner HTML of the output area element to the matches array
-		  var number = matches.length
+		  const number = matches.length
 		  outputArea.innerHTML += "<br><b>" + number + " Results</b>" + "<br><br>" + matches.join("<br>");
 		}
+		
+
+		function countCourts(matches) {
+			let courtCounts = {};
+			for (var i = 0; i < matches.length; i++) {
+				const match = matches[i];
+				const courtName = match.split(" ")[1];
+				if (courtCounts[courtName]) {
+					courtCounts[courtName]++;
+				} else {
+					courtCounts[courtName] = 1;
+				}
+			}
+			let courtArray = [];
+			for (let courtName in courtCounts) {
+				courtArray.push({court: courtName, count: courtCounts[courtName]});
+			}
+			
+			courtArray.sort(function(a, b) {
+				return b.count - a.count;
+			});
+			
+			return courtArray;
+		}
+		
+		function getCountCourtsTable(courtArray) {
+			let tableHtml = "<table><thead><tr><th>Court</th><th>Count</th></tr></thead><tbody>";
+			for (let i = 0; i < courtArray.length; i++) {
+				let court = courtArray[i];
+				tableHtml += "<tr><td>" + court.court + "</td><td>" + court.count + "</td></tr>";
+			}
+			tableHtml += "</tbody></table>";
+			return tableHtml;
+		}
+
+
 	</script>
 </head>
 <body>
 	<h1>Citation Finder</h1>
-	<h2>How it Works</h2>
 	<p>
-		This tool uses regular expression patterns to search text for neutral citations, other citations, statutes, and regulations. It produces a list of each below. If there are less than 30 results in a given category, a link is provided to search for all of those results on CanLII. Citations to less common reporters may not be located, and the tool may occasionally identify something as a citation which is not one. Multiple parallel citations to the same case will be identified separately.
+		This tool uses regular expressions to search text for neutral citations, other citations, statutes, and regulations. It produces a list of each below. A summary section provides various other bits and bobs including links to search for all of the cases, a summary of which courts are most cited, and a list of all citations in alphabetical order.
 	</p>
 	<p>
 		This tool does not collect any data. The inputted text is not sent to any external server or stored on this website itself. All processing is done within your web browser.
@@ -157,27 +282,37 @@
 		See also <a href="citation-linker.html">Citation Linker</a>, to add a link to CanLII to neutral citations found in an inputted text.
 	</p>
 	<h2>Input</h2>
-	<label for="input-box">Enter text here:</label><br>
+	<label for="input-box"></label><br>
 	<textarea id="input-box" rows="10" cols="100%" placeholder="Enter your text here"></textarea><br><br>
 	<button onclick="searchAll()">Search</button><br><br>
 	<h2>Output</h2>
+	<hr>
 	<p><strong>Summary</strong></p>
+	<hr>
 	<p>
 		<div id="summary"></div><br><br>
 	</p>
+	<hr>
 	<p><strong>Neutral Citations</strong></p>
+	<hr>
 	<p>
 		<div id="neutral-output-area"></div><br><br>
 	</p>
+	<hr>
 	<p><strong>Other Citations</strong></p>
+	<hr>
 	<p>
 		<div id="other-output-area"></div><br><br>
 	</p>
+	<hr>
 	<p><strong>Statutes</strong></p>
+	<hr>
 	<p>
 		<div id="statute-output-area"></div><br><br>
 	</p>
+	<hr>
 	<p><strong>Regulations</strong></p>
+	<hr>
 	<p>
 		<div id="regulation-output-area"></div>
 	</p>

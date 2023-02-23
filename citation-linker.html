@@ -65,6 +65,10 @@
 	<script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.1/dist/purify.min.js"></script> <!-- Include the DOMPurify library -->
 	<script>
 		function searchAndLink() {
+			
+			// Clear output area
+			document.getElementById("output-area").innerHTML = "";
+			
 			// Get the value from the input area
 			var inputText = DOMPurify.sanitize(document.getElementById("input-area").innerHTML);
 			

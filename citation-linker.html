@@ -102,7 +102,7 @@
 			  var index = citationParts[2];
 
 			  var jurisdiction;
-			  if (court.toLowerCase() === "scc") {
+			  if (court.toLowerCase() === "scc" || court.charAt(0).toLowerCase() === "f") {
 				jurisdiction = "ca";
 			  } else {
 				jurisdiction = court.substring(0, 2);

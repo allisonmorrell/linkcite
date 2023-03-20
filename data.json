@@ -1,0 +1,70 @@
+{
+  "form_groups": [
+    {
+      "id": "civil_rules",
+      "name": "Civil Rules",
+      "forms": [
+        {
+          "id": "form_1",
+          "name": "Form 1 - Example Form",
+          "html_content": "<p>Form 1 content...</p>",
+          "related_rule": {
+            "title": "Rule 1.1",
+            "content": "<p>Rule 1.1 content...</p>"
+          },
+          "explanatory_text": "<p>Explanatory text for Form 1...</p>",
+          "secondary_source": {
+            "url": "https://example.com/secondary_source_form_1",
+            "title": "Further Explanatory Text for Form 1"
+          },
+          "downloads": {
+            "word": "https://example.com/download_form_1_word",
+            "pdf": "https://example.com/download_form_1_pdf"
+          }
+        },
+        {
+          "id": "form_2",
+          "name": "Form 2 - Another Example Form",
+          "html_content": "<p>Form 2 content...</p>",
+          "related_rule": {
+            "title": "Rule 2.1",
+            "content": "<p>Rule 2.1 content...</p>"
+          },
+          "explanatory_text": "<p>Explanatory text for Form 2...</p>",
+          "secondary_source": {
+            "url": "https://example.com/secondary_source_form_2",
+            "title": "Further Explanatory Text for Form 2"
+          },
+          "downloads": {
+            "word": "https://example.com/download_form_2_word",
+            "pdf": "https://example.com/download_form_2_pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "family_rules",
+      "name": "Family Rules",
+      "forms": [
+        {
+          "id": "form_3",
+          "name": "Form 3 - Family Example Form",
+          "html_content": "<p>Form 3 content...</p>",
+          "related_rule": {
+            "title": "Rule 3.1",
+            "content": "<p>Rule 3.1 content...</p>"
+          },
+          "explanatory_text": "<p>Explanatory text for Form 3...</p>",
+          "secondary_source": {
+            "url": "https://example.com/secondary_source_form_3",
+            "title": "Further Explanatory Text for Form 3"
+          },
+          "downloads": {
+            "word": "https://example.com/download_form_3_word",
+            "pdf": "https://example.com/download_form_3_pdf"
+          }
+        }
+      ]
+    }
+  ]
+}

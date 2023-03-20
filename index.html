@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Court Forms</title>
+		<script src="app.js" defer></script>
+
+	</head>
+    <body>
+        <div id="form-selection">
+            <label for="form-group">Select Form Group:</label>
+            <select id="form-group">
+                <!-- Options to be populated from the server -->
+            </select>
+			<br>
+            <label for="court-form">Select Court Form:</label>
+            <select id="court-form">
+                <!-- Options to be populated based on the selected form group -->
+            </select>
+			<!---Add route--->
+			<br>
+			<button id="get-form">Get Form</button>
+        </div>
+        <div id="form-render">
+            <!-- Division to render the HTML form provided by the server -->
+			<h3>Court form:</h3>
+        </div>
+        <div id="form-actions">
+            <button id="download-word" onclick="location.href='/download_word'">Download Word</button>
+            <button id="download-pdf" onclick="location.href='/download_pdf'">Download PDF</button>
+            <button id="print-form" onclick="window.print()">Print Form</button>
+        </div>
+        <div id="explanatory-text">
+            <h3>Explanatory text</h3>
+			<!-- Division to render explanatory text provided by the server -->
+        </div>
+        <div id="related-rule">
+            <h3>Related Rule</h3>
+			<!-- Content of Rule to which the form is related -->
+        </div>
+        <div id="secondary-source">
+            <a href="/further_explanatory_text" id="further-text-link">Further Explanatory Text</a>
+        </div>
+    </body>
+</html>

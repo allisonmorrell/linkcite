@@ -1,46 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Court Forms</title>
-		<script src="app.js" defer></script>
 
-	</head>
-    <body>
-        <div id="form-selection">
-            <label for="form-group">Select Form Group:</label>
-            <select id="form-group">
-                <!-- Options to be populated from the server -->
-            </select>
-			<br>
-            <label for="court-form">Select Court Form:</label>
-            <select id="court-form">
-                <!-- Options to be populated based on the selected form group -->
-            </select>
-			<!---Add route--->
-			<br>
-			<button id="get-form">Get Form</button>
-        </div>
-        <div id="form-render">
-            <!-- Division to render the HTML form provided by the server -->
-			<h3>Court form:</h3>
-        </div>
-        <div id="form-actions">
-            <button id="download-word" onclick="location.href='/download_word'">Download Word</button>
-            <button id="download-pdf" onclick="location.href='/download_pdf'">Download PDF</button>
-            <button id="print-form" onclick="window.print()">Print Form</button>
-        </div>
-        <div id="explanatory-text">
-            <h3>Explanatory text</h3>
-			<!-- Division to render explanatory text provided by the server -->
-        </div>
-        <div id="related-rule">
-            <h3>Related Rule</h3>
-			<!-- Content of Rule to which the form is related -->
-        </div>
-        <div id="secondary-source">
-            <a href="/further_explanatory_text" id="further-text-link">Further Explanatory Text</a>
-        </div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkcite</title>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Linkcite</h1>
+    </header>
+
+    <!-- Citation Finder Section -->
+    <section>
+        <h2>Citation Finder</h2>
+	<p>
+		This tool uses regular expressions to search text for neutral citations, other citations, statutes, and regulations. It produces a list of each below. A summary section provides various other bits and bobs including links to search for all of the cases, a summary of which courts are most cited, and a list of all citations in alphabetical order.
+	</p>
+        </p>
+        <a href="citation-finder.html">Citation Finder</a>
+    </section>
+
+    <!-- Citation Linker Section -->
+    <section>
+        <h2>Citation Linker</h2>
+<p>
+		Input text in the box below which contains neutral citations. Text may be formatted as rich text including italics, bolding, and links. Upon pressing the button, the text will appear below with each neutral citation linked to <a href="https://www.canlii.org/en/">CanLII</a>. Only neutral citations are supported. This is a rough version and may occasionally produce broken links.
+	</p>
+        <a href="citation-linker.html">Citation Linker</a>
+    </section>
+
+</body>
+
 </html>

@@ -113,7 +113,8 @@
 			// Define the regular expression patterns for all four searches
 			const neutralPattern = /(?:1|2)[0-9]{3} [A-Z]{2,8} [0-9]{1,8}/g;
 			const otherPattern = /\[?[0-9]{1,5}\]? ?[0-9]{0,5} (?:BCLR|DLR|OR|WWR|CCC|CPR|Can Tax J|ALR|FCR|Sask LR|CBR|CHRR|CJFL|CLELJ|CLT|CRR|CR|MLB|RFL|SCR|SCJ|ACS|LAC|APR|B\.C\.L\.R\.|D\.L\.R\.|O\.R\.|W\.W\.R\.|C\.C\.C\.|C\.P\.R\.|Can Tax J|A\.L\.R\.|F\.C\.R\.|Sask\. L\.R\.|C\.B\.R\.|C\.H\.R\.R\.|C\.J\.F\.L\.|C\.L\.E\.L\.J\.|C\.L\.T\.|C\.R\.R\.|C\.R\.|M\.L\.B\.|R\.F\.L\.|S\.C\.R\.|S\.C\.J\.|A\.C\.S\.|L\.A\.C\.|A\.P\.R\.) \(?[0-9]{0,1}[a-z]{0,3}\)? ?[0-9]{1,6}/gi;
-			const statutePattern = /R?\.?[SC]\.?[A-Z\.]{0,5}[ ,]{1,2}[0-9\-]{0,10}[ ,]{0,2}c.? [0-9A-Z\-‑]{1,6}/gi;
+			// Added option for space to be omitted between c and number
+			const statutePattern = /R?\.?[SC]\.?[A-Z\.]{0,5}[ ,]{1,2}[0-9\-]{0,10}[ ,]{0,2}(?:c.? |c\.[0-9])[0-9A-Z\-‑]{1,6}/gi;
 			const regulationPattern = /(?:BC Reg|Alta Reg|Sask Reg|Man Reg|O Reg|RLRQ|NB Reg|NS Reg|PEI Reg|NLR|SOR|CRC|YOIC|NWT Reg|NU Reg|NWT R\-|NU R\-|BC Reg\.|B\.C\. Reg\.|Alta\. Reg\.|Sask\. Reg\.|Man\. Reg\.|O\. Reg\.|RLRQ\.|NB Reg\.|NS Reg\.|PEI Reg\.|NLR\.|C\.R\.C\.|YOIC\.|NWT Reg\.|NU Reg\.) [0-9]{1,5}\/[0-9]{2,4}/gi;
 
 			// Use the patterns to search for matches in the input text

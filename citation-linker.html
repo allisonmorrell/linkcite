@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Link Neutral Citations</title>
+	<style>
+		#input-area {
+			width: 95%;
+			border: 1px solid #ccc; /* Add a 1px solid gray border */
+			padding: 10px; /* Add some padding to the input area */
+		}
+		
+		/* Add modern fonts */
+		@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+		/* Set the default font and background color */
+		body {
+		  font-family: 'Roboto', sans-serif;
+		  background-color: #f2f2f2;
+		}
+
+		/* Style for the main heading */
+		h1 {
+		  font-size: 36px;
+		  font-weight: bold;
+		  color: #333;
+		  margin: 20px 0;
+		}
+
+		/* Style for secondary headings */
+		h2 {
+		  font-size: 24px;
+		  font-weight: bold;
+		  color: #333;
+		  margin: 15px 0;
+		}
+
+		/* Style for regular text */
+		p {
+		  font-size: 16px;
+		  line-height: 1.5;
+		  color: #666;
+		  margin: 10px 0;
+		}
+		
+		
+		/* Style for the button */
+		button {
+		  font-size: 16px;
+		  font-weight: bold;
+		  color: #fff;
+		  background-color: #4caf50;
+		  border: none;
+		  border-radius: 4px;
+		  padding: 12px 24px;
+		  cursor: pointer;
+		  transition: all 0.3s ease;
+		}
+
+		/* Hover state for the button */
+		button:hover {
+		  background-color: #3e8e41;
+		}
+		
+	</style>
+	<script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.1/dist/purify.min.js"></script> <!-- Include the DOMPurify library -->
+	<script>
+		function searchAndLink() {
+			
+			// Clear output area
+			document.getElementById("output-area").innerHTML = "";
+			
+			// Get the value from the input area
+			var inputText = DOMPurify.sanitize(document.getElementById("input-area").innerHTML);
+			
+			// Define the regular expression pattern for searching for terms
+			var pattern = /(?:1|2)[0-9]{3} [a-zA-Z]{2,8} [0-9]{1,8}/gi;
+			
+			// Use the pattern to search for matches in the input text
+			var duplicatesMatches = inputText.match(pattern);
+			var matches = [...new Set(duplicatesMatches)];
+			
+			// Replace each matched citation with a hyperlink
+			if (matches !== null) {
+				for (var i = 0; i < matches.length; i++) {
+					if (!matches[i].includes("CanLII")) {
+						var citation = matches[i];
+						var link = getLinkForcitation(citation);
+						var linkText = "<a href='" + link + "' target='_blank'>" + citation + "</a>";
+						inputText = inputText.replace(new RegExp(citation, "g"), linkText);;
+					}
+				}
+			}
+			
+			// Display the modified input text in the output area
+			document.getElementById("output-area").innerHTML = DOMPurify.sanitize(inputText);
+		}
+		
+		function getLinkForcitation(citation) {
+			 var citationParts = citation.split(" ");
+			  var year = citationParts[0];
+			  var court = citationParts[1];
+			  var index = citationParts[2];
+
+			  var jurisdiction;
+			  if (court.toLowerCase() === "scc" || court.charAt(0).toLowerCase() === "f") {
+				jurisdiction = "ca";
+			  } else {
+				jurisdiction = court.substring(0, 2);
+			  }
+
+			  var stripped = citation.replace(/ /g, "");
+			  return `https://www.canlii.org/en/${jurisdiction.toLowerCase()}/${court.toLowerCase()}/doc/${year}/${stripped.toLowerCase()}/${stripped.toLowerCase()}.html`;
+		}
+	</script>
+</head>
+<body>
+	<h1>Citation Linker</h1>
+	<h2>How It Works</h2>
+	<p>
+		Input text in the box below which contains neutral citations. Text may be formatted as rich text including italics, bolding, and links. Upon pressing the button, the text will appear below with each neutral citation linked to <a href="https://www.canlii.org/en/">CanLII</a>. Only neutral citations are supported. This is a rough version and may occasionally produce broken links.
+	</p>
+	<p>
+		This tool does not collect any data. The inputted text is not sent to any external server or stored on this website itself. All processing is done within your web browser.
+	</p>
+	<p>
+		See also <a href="citation-finder.html">Citation Finder</a> to obtain a list of case citations (neutral and otherwise), statutes and regulations in an inputted text.
+	</p>
+	<h2>Input Box</h2>
+	<div id="input-area" contenteditable="true" placeholder="Type your text here"></div><br><br>
+	<button onclick="searchAndLink()">Link Citations</button><br><br>
+	<h2>Output</h2>
+	<div id="output-area"></div>
+</body>
+</html>
